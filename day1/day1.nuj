@@ -1,0 +1,18 @@
+(defn is-digit? (s)
+  (def c (ref s 0))
+  (and (>= c #\0) (<= c #\9)))
+
+(defn parse-line (l)
+  (-> (split l "")
+      (filter is-digit?)))
+
+(defn sum-line (l)
+  (if (pair? l)
+      (read/single (cat (car l) (car (last-pair l))))
+      0))
+
+(def input (slurp "input.txt"))
+(def lines (split input "\n"))
+(def res (map lines (fn (l) (sum-line (parse-line l)))))
+(def sum (reduce res + 0))
+(display sum)

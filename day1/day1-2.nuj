@@ -1,0 +1,49 @@
+(defn is-digit? (s)
+  (def c (ref s 0))
+  (and (>= c #\0) (<= c #\9)))
+
+(def digit-map { :one 1
+                 :two 2
+                 :three 3
+                 :four 4
+                 :five 5
+                 :six 6
+                 :seven 7
+                 :eight 8
+                 :nine 9
+                 :1 1
+                 :2 2
+                 :3 3
+                 :4 4
+                 :5 5
+                 :6 6
+                 :7 7
+                 :8 8
+                 :9 9 })
+
+(defn parse-line (l)
+      (let ((first 0) (first-i 9999)
+            (last 0) (last-i -9999))
+      (doseq (kw (:keys digit-map))
+             (def s (:string kw))
+             (def v (ref digit-map kw))
+             (def fi (:index-of l s))
+             (def li (:last-index-of l s))
+             (when (and (>= fi 0) (< fi first-i))
+               (set! first-i fi)
+               (set! first v))
+             (when (and (>= li 0) (> li last-i))
+               (set! last-i li)
+               (set! last v)))
+      (cons first last)))
+
+(defn sum-line (l)
+  (if (pair? l)
+      (+ (* 10 (car l)) (cdr l))
+      0))
+
+(def input (slurp "input.txt"))
+(def lines (split input "\n"))
+(def res (map lines (fn (l) (sum-line (parse-line l)))))
+(def sum (reduce res + 0))
+(display sum)
